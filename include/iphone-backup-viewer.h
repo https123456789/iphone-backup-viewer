@@ -29,6 +29,7 @@ struct iphone_contact {
 
 void iphone_contacts_init(struct iphone_contacts_list *contacts);
 void iphone_contacts_add(struct iphone_contacts_list *contacts, struct iphone_contact *contact);
+void iphone_contacts_list_print(struct iphone_contacts_list *contacts);
 int iphone_backup_contacts_scan(struct iphone_backup *ib);
 // TODO: add free function for contacts
 
