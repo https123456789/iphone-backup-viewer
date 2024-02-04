@@ -1,0 +1,8 @@
+[wrap-git]
+url = https://github.com/libimobiledevice/libplist
+revision = master
+depth = 1
+patch_directory = plist
+
+[provide]
+plist = plist_dep

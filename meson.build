@@ -1,11 +1,18 @@
 project('iphone-backup-viewer', 'c', version : '0.0.0')
 
+warning_level = 3
+
 c_log = dependency('c-log')
 argparse = dependency('argparse')
+plist = dependency('plist')
 
+include_dirs = include_directories('include')
+
+subdir('src')
 
 executable(
   'iphone-backup-viewer',
-  ['src/main.c'],
-  dependencies: [c_log, argparse]
+  sources,
+  dependencies: [c_log, argparse, plist],
+  include_directories: include_dirs
 )

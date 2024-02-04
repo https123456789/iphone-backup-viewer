@@ -3,3 +3,4 @@ build
 .env
 subprojects/*
 !subprojects/*.wrap
+!subprojects/packagefiles

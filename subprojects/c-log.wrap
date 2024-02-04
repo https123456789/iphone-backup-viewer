@@ -1,6 +1,6 @@
 [wrap-git]
 url = https://github.com/https123456789/c-log
-revision = head
+revision = main
 depth = 1
 method = cmake
 
