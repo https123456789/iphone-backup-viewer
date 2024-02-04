@@ -34,6 +34,9 @@ int iphone_backup_init(struct iphone_backup *ib, const char *path) {
 
     ib->path = path;
 
+    ib->contacts = malloc(sizeof(struct iphone_contacts_list));
+    iphone_contacts_init(ib->contacts);
+
     return 0;
 }
 

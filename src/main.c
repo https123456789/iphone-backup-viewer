@@ -28,6 +28,7 @@ int main(int argc, const char **argv) {
     log_info("iPhone Backup Viewer - Ben Landon 2024");
     log_info("Backup directory: %s", backup_dir_path);
 
+    // Initialize the primary backup structure
     struct iphone_backup backup;
 
     if (iphone_backup_init(&backup, backup_dir_path) < 0) {
@@ -36,6 +37,11 @@ int main(int argc, const char **argv) {
 
     if (backup_is_complete(&backup) < 0) {
         log_fatal("Incomplete backup!");
+        return EXIT_FAILURE;
+    }
+
+    if (iphone_backup_contacts_scan(&backup) < 0) {
+        log_fatal("Failed to scan for contacts");
         return EXIT_FAILURE;
     }
 
