@@ -1,8 +1,10 @@
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <sqlite3.h>
 #include <c-log/log.h>
 #include "iphone-backup-viewer.h"
+#include "util.h"
 
 // Contacts are stored in an SQLite3 database
 #define CONTACTS_PATH_EXT_LEN 43
@@ -27,6 +29,21 @@ void iphone_contacts_add(struct iphone_contacts_list *contacts, struct iphone_co
     }
 
     c->next = contact;
+}
+
+void iphone_contacts_list_print(struct iphone_contacts_list *contacts) {
+    struct iphone_contact *c = contacts->contacts;
+
+    if (c == NULL) {
+        printf("No contacts");
+        return;
+    }
+
+    while (c != NULL) {
+        char *formatted_name = format_name(c->first_name, c->middle_name, c->last_name);
+        printf("- %s\n", formatted_name);
+        c = c->next;
+    }
 }
 
 int iphone_backup_contacts_scan(struct iphone_backup *ib) {
@@ -72,14 +89,31 @@ int iphone_backup_contacts_scan(struct iphone_backup *ib) {
         const char *last_name = (const char *) sqlite3_column_text(res, 2);
 
         struct iphone_contact *contact = malloc(sizeof(struct iphone_contact));
-        contact->first_name = first_name;
-        contact->middle_name = middle_name;
-        contact->last_name = last_name;
         contact->next = NULL;
 
-        iphone_contacts_add(ib->contacts, contact);
+        // Copy in the data
+        if (first_name != NULL) {
+            contact->first_name = malloc(strlen(first_name) + 1);
+            strcpy((char *) contact->first_name, first_name);
+        } else {
+            contact->first_name = NULL;
+        }
 
-        log_debug("Contact: %s %s %s", contact->first_name, contact->middle_name, contact->last_name);
+        if (middle_name != NULL) {
+            contact->middle_name = malloc(strlen(middle_name) + 1);
+            strcpy((char *) contact->middle_name, middle_name);
+        } else {
+            contact->middle_name = NULL;
+        }
+
+        if (last_name != NULL) {
+            contact->last_name = malloc(strlen(last_name) + 1);
+            strcpy((char *) contact->last_name, last_name);
+        } else {
+            contact->last_name = NULL;
+        }
+
+        iphone_contacts_add(ib->contacts, contact);
     }
 
     sqlite3_finalize(res);

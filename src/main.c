@@ -22,6 +22,7 @@ static struct cmd_struct commands[] = {
 int main(int argc, const char **argv) {
     // Args
     char *backup_dir_path = ".";
+
     // Arg parsing
     struct argparse_option options[] = {
         OPT_HELP(),
@@ -74,6 +75,8 @@ int cmd_contacts(int argc, const char **argv, char *backup_dir_path) {
         log_fatal("Failed to scan for contacts");
         return EXIT_FAILURE;
     }
+
+    iphone_contacts_list_print(backup.contacts);
 
     return EXIT_SUCCESS;
 }
