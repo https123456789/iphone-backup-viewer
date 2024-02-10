@@ -6,8 +6,17 @@
 #include "iphone-backup-viewer.h"
 
 static const char* const usage[] = {
-    "iphone-backup-viewer [options]",
+    "iphone-backup-viewer [options] [cmd] [args]",
     NULL
+};
+
+struct cmd_struct {
+    const char *cmd;
+    int (*fn) (int, const char**, char*);
+};
+
+static struct cmd_struct commands[] = {
+    {"contacts", cmd_contacts}
 };
 
 int main(int argc, const char **argv) {
@@ -20,14 +29,35 @@ int main(int argc, const char **argv) {
         OPT_END()
     };
     struct argparse argparse;
-    argparse_init(&argparse, options, usage, 0);
+    argparse_init(&argparse, options, usage, ARGPARSE_STOP_AT_NON_OPTION);
     argc = argparse_parse(&argparse, argc, argv);
+
+    if (argc < 1) {
+        argparse_usage(&argparse);
+        return EXIT_FAILURE;
+    }
 
     log_set_level(LOG_TRACE);
 
     log_info("iPhone Backup Viewer - Ben Landon 2024");
     log_info("Backup directory: %s", backup_dir_path);
 
+    struct cmd_struct *cmd = NULL;
+
+    for (int i = 0; i < sizeof(commands) / sizeof(struct cmd_struct); i++) {
+        if (!strcmp(commands[i].cmd, argv[0])) {
+            cmd = &commands[i];
+        }
+    }
+
+    if (cmd) {
+        return cmd->fn(argc, argv, backup_dir_path);
+    }
+
+    return EXIT_FAILURE;
+}
+
+int cmd_contacts(int argc, const char **argv, char *backup_dir_path) {
     // Initialize the primary backup structure
     struct iphone_backup backup;
 
