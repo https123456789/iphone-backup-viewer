@@ -17,6 +17,8 @@ struct iphone_contact {
     const char *first_name;
     const char *middle_name;
     const char *last_name;
+    const char *id;
+    const char *phone;
 
     // Internal
     struct iphone_contact *next;

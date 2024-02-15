@@ -4,8 +4,8 @@ warning_level = 3
 
 c_log = dependency('c-log')
 argparse = dependency('argparse')
-plist = dependency('plist')
 sqlite3 = dependency('sqlite3')
+plist = dependency('plist')
 
 include_dirs = include_directories('include')
 

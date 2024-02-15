@@ -3,7 +3,7 @@
 #include "util.h"
 #include <c-log/log.h>
 
-char* format_name(char *first, char *middle, char *last) {
+char* format_name(const char *first, const char *middle, const char *last) {
     // Figure out how many characters are in each string
     size_t char_count = 0;
 
