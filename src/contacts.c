@@ -42,15 +42,45 @@ void iphone_contacts_add(struct iphone_contacts_list *contacts, struct iphone_co
 
 void iphone_contacts_list_print(struct iphone_contacts_list *contacts) {
     struct iphone_contact *c = contacts->contacts;
+    int max_name_size = 0;
 
     if (c == NULL) {
         printf("No contacts");
         return;
     }
 
+    // Iterate once over the list to get the max item sizes
     while (c != NULL) {
         char *formatted_name = format_name(c->first_name, c->middle_name, c->last_name);
-        printf("<%s>\t%s @ %s\n", c->id, formatted_name, c->phone);
+        int len = strlen(formatted_name);
+        if (len > max_name_size) {
+            max_name_size = len;
+        }
+        c = c->next;
+    }
+    c = contacts->contacts;
+
+    // Column Headers
+    printf("ID\tName");
+    for (int i = 0; i <= max_name_size; i++) {
+        printf(" ");
+    }
+    printf("Phone\n");
+
+    while (c != NULL) {
+        char *formatted_name = format_name(c->first_name, c->middle_name, c->last_name);
+        printf("%s\t%s", c->id, formatted_name);
+
+        for (int i = strlen(formatted_name); i <= max_name_size; i++) {
+            printf(" ");
+        }
+
+        if (c->phone == NULL) {
+            printf("No phone\n");
+        } else {
+            printf("%s\n", c->phone);
+        }
+
         c = c->next;
     }
 }
